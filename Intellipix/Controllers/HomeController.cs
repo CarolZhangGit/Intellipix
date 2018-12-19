@@ -12,6 +12,7 @@ using System.Configuration;
 using System.Threading.Tasks;
 using Microsoft.ProjectOxford.Vision;
 using System.Security.Claims;
+using Microsoft.ApplicationInsights;
 
 namespace Intellipix.Controllers
 {
@@ -54,15 +55,15 @@ namespace Intellipix.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
-
+            ViewBag.Message = "Oops" + CauseAnError();
             return View();
         }
 
         public ActionResult Contact()
         {
+            var client = new TelemetryClient();
+            client.TrackEvent("Contact Information Was Requested");
             ViewBag.Message = "Your contact page.";
-
             return View();
         }
 
@@ -150,5 +151,15 @@ namespace Intellipix.Controllers
 
             return false;
         }
+
+        private int CauseAnError()
+        {
+            // Force an unhandled exception
+            System.Diagnostics.Trace.TraceWarning("Something bad is about to happen.");
+            var numerator = 0;
+            var denominator = 0;
+            return numerator / denominator;
+        }
+
     }
 }
